@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Plate Detection</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .container { width: 80%; margin: auto; }
+        .table { width: 50%; margin: auto; border-collapse: collapse; }
+        .table th, .table td { border: 1px solid black; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Real-Time License Plate Detection</h1>
+
+    <h2>Live Video Stream</h2>
+    <img src="{{ url_for('video_feed') }}" width="80%">
+
+    <h2>Detected License Plates</h2>
+    <table id="platesTable" class="table">
+        <tr><th>License Plate</th><th>Timestamp</th></tr>
+    </table>
+
+    <h2>CSV Data</h2>
+    <button onclick="fetchCSV()">View CSV Data</button>
+    <div id="csvData"></div>
+
+    <script>
+        function fetchPlates() {
+            $.getJSON('/get_detected_plates', function(data) {
+                $('#platesTable tr:not(:first)').remove();
+                data.forEach(row => {
+                    $('#platesTable').append('<tr><td>' + row[0] + '</td><td>' + row[1] + '</td></tr>');
+                });
+            });
+        }
+
+        function fetchCSV() {
+            $.get('/get_csv_data', function(data) {
+                $('#csvData').html(data);
+            });
+        }
+
+        setInterval(fetchPlates, 2000);  // Refresh detected plates every 2 seconds
+    </script>
+</body>
+</html>

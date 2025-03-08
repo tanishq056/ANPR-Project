@@ -1,0 +1,5 @@
+train: /content/drive/MyDrive/ANPR/datasets/images/train
+val: /content/drive/MyDrive/ANPR/datasets/images/val
+
+nc: 1  # Update this with the number of classes in your dataset
+names: ['license plates']  # Replace with your actual class names
