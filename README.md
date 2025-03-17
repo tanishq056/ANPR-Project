@@ -1,5 +1,7 @@
 # Automatic Number Plate Recognition (ANPR) System
 
+Host Link :- https://huggingface.co/spaces/tanishq04/ANPR ( Live Video stream may not visible on hosted server due to platform issue and it will take some time to load Output due to Low GPU )
+
 ## Overview
 This project is an Automatic Number Plate Recognition (ANPR) system using YOLO and Tesseract OCR. It processes a video file to detect and recognize license plates, then saves the detected plates to a CSV file and provides a live streaming interface via Flask.
 
