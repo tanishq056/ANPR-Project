@@ -6,18 +6,22 @@ import os
 from ultralytics import YOLO
 from datetime import datetime
 from flask import Flask, render_template, Response, jsonify
+from flask import send_from_directory
 
 app = Flask(__name__)
 
 # Set up Tesseract OCR
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = "C:\\Program Files\\Tesseract-OCR\\tesseract.exe"
 
 # Load YOLO model
-model = YOLO(r"D:\ANPR Project\ANPR\runs\detect\train9\weights\best.pt")
+model = YOLO("D:\\Placements\\Projects\\ANPR Project\\ANPR\\runs\\detect\\train9\\weights\\best.pt")
 
 # Open video file
-video_path = r"D:\ANPR Project\videoplayback.mp4"
+video_path = "D:\\Placements\\Projects\\ANPR Project\\videoplayback.mp4"
 cap = cv2.VideoCapture(video_path)
+if not cap.isOpened():
+    print("❌ Error: Could not open video file.")
+
 
 # Get video properties
 frame_width = int(cap.get(3))  # Video width
@@ -46,6 +50,11 @@ def save_to_csv():
 # Video processing function
 def process_video():
     global detected_plates
+    cap = cv2.VideoCapture(video_path)  # Re-open video inside function
+    if not cap.isOpened():
+        print("❌ Error: Unable to open video file.")
+        return
+    
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:
@@ -115,6 +124,10 @@ def get_csv_data():
         df = pd.read_csv(csv_path)
         return df.to_html(classes="table table-bordered")
     return "<h3>No Data Available</h3>"
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
     app.run(debug=True)
